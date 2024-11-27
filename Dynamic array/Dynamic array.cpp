@@ -7,53 +7,65 @@ using namespace std;
 
 // Función para insertar un número en el array manteniendo el orden
 void insertarOrdenado(int*& array, int& tamano, int numero) {
-    // Crear un nuevo array con espacio adicional (+1)
-    int* nuevoArray = new int[tamano + 1];
-
-    // Insertar elementos del array antiguo en el nuevo, manteniendo el orden
+    int* nuevoArray = new int[tamano + 1]; // Crear un nuevo array con espacio adicional
     int i = 0, j = 0;
-    bool insertado = false; // Bandera para verificar si el número se ha insertado
+    bool insertado = false;
+
     while (i < tamano) {
-        // Insertar el nuevo número en su posición correcta
-        if (!insertado && numero < array[i]) {
-            nuevoArray[j++] = numero; // Insertar el número
+        if (!insertado && numero < array[i]) { // Insertar número en su posición
+            nuevoArray[j++] = numero;
             insertado = true;
         }
-        // Copiar el resto de elementos
-        nuevoArray[j++] = array[i++];
+        nuevoArray[j++] = array[i++]; // Copiar elementos del array antiguo
     }
 
-    // Si el número es mayor que todos, se inserta al final
     if (!insertado) {
-        nuevoArray[j] = numero;
+        nuevoArray[j] = numero; // Insertar al final si es el mayor
     }
 
-    // Liberar la memoria del array antiguo
-    delete[] array;
-
-    // Actualizar el puntero al nuevo array y su tamaño
+    delete[] array; // Liberar memoria del array antiguo
     array = nuevoArray;
     tamano++;
 }
 
+// Función para ordenar un array
+void ordenarArray(int*& array, int tamano) {
+    int* nuevoArray = new int[tamano]; // Crear un nuevo array
+    for (int i = 0; i < tamano; i++) {
+        nuevoArray[i] = array[i]; // Copiar elementos del array original
+    }
+
+    // Implementar un simple Bubble Sort
+    for (int i = 0; i < tamano - 1; i++) {
+        for (int j = 0; j < tamano - i - 1; j++) {
+            if (nuevoArray[j] > nuevoArray[j + 1]) {
+                // Intercambiar elementos si están desordenados
+                int temp = nuevoArray[j];
+                nuevoArray[j] = nuevoArray[j + 1];
+                nuevoArray[j + 1] = temp;
+            }
+        }
+    }
+
+    delete[] array; // Liberar el array original
+    array = nuevoArray; // Reemplazar por el nuevo array ordenado
+}
+
 int main() {
     int* array = nullptr; // Puntero al array dinámico
-    int tamano = 0;       // Tamaño actual del array
+    int tamano = 0;       // Tamano actual del array
     int numero;
 
     cout << "Introduce numeros (escribe -1 para terminar): " << endl;
     while (true) {
         cin >> numero;
 
-        // Salir del bucle si el usuario introduce -1
-        if (numero == -1) {
+        if (numero == -1) { // Salir si el usuario introduce -1
             break;
         }
 
-        // Insertar el número en el array manteniendo el orden
         insertarOrdenado(array, tamano, numero);
 
-        // Imprimir el array actualizado
         cout << "Array actual: ";
         for (int i = 0; i < tamano; i++) {
             cout << array[i] << " ";
@@ -61,11 +73,19 @@ int main() {
         cout << endl;
     }
 
-    // Liberar la memoria al final del programa
-    delete[] array;
+    // Ordenar el array antes de terminar
+    ordenarArray(array, tamano);
 
+    cout << "Array final ordenado: ";
+    for (int i = 0; i < tamano; i++) {
+        cout << array[i] << " ";
+    }
+    cout << endl;
+
+    delete[] array; // Liberar memoria al final del programa
     return 0;
 }
+
 
 // Ejecutar programa: Ctrl + F5 o menú Depurar > Iniciar sin depurar
 // Depurar programa: F5 o menú Depurar > Iniciar depuración
